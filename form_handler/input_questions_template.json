@@ -1,13 +1,22 @@
 [
     {
-        "Template Name": "Personal PAR",
-        "Plan Type": "Participating Whole Life Insurance",
-        "Plan Type Reasoning": "You preferred a participating whole life policy more than a whole life policy because it offers on-growing cash value and death benefit. In the long-term, these amounts can out pace inflation and ensures upon death the coverage payout holds its purchasing value. We have also discussed the difference between participating whole life vs Universal life insurance, you liked Par Policy better because par policies have its guarantees, whereas while Universal Life policies offer GIC type instruments, you wanted returns that are a little higher.  Universal life policies do offer variable investments, but these are subject to market volatility, and the policyholder will need to manage their own investment portfolio within their policies. You preferred Par life be over Term life because once again it features on-growing cash value and death benefit values (whereas term does not), as well as the option for future collateral ability. You also understand that with the same coverage, term life is significantly cheaper.",
+        "template_name": "Personal PAR",
+        "plan_type": "Participating Whole Life Insurance",
+        "plan_type_reasoning": "You preferred a participating whole life policy more than a whole life policy because it offers on-growing cash value and death benefit. In the long-term, these amounts can out pace inflation and ensures upon death the coverage payout holds its purchasing value. We have also discussed the difference between participating whole life vs Universal life insurance, you liked Par Policy better because par policies have its guarantees, whereas while Universal Life policies offer GIC type instruments, you wanted returns that are a little higher.  Universal life policies do offer variable investments, but these are subject to market volatility, and the policyholder will need to manage their own investment portfolio within their policies. You preferred Par life be over Term life because once again it features on-growing cash value and death benefit values (whereas term does not), as well as the option for future collateral ability. You also understand that with the same coverage, term life is significantly cheaper.",
         "all_fields": {
             "Client Name": {
                 "field_type": "FIB"
             },
             "Agent Name": {
+                "field_type": "FIB"
+            },
+            "Plan coverage": {
+                "field_type": "FIB"
+            },
+            "Policy number": {
+                "field_type": "FIB"
+            },
+            "Client occupation": {
                 "field_type": "FIB"
             },
             "Plan provider": {
@@ -28,15 +37,6 @@
                     "Life Pay"
                 ]
             },
-            "Plan coverage": {
-                "field_type": "FIB"
-            },
-            "Policy number": {
-                "field_type": "FIB"
-            },
-            "Occupation": {
-                "field_type": "FIB"
-            },
             "Existing Plans": {
                 "field_type": "multiple",
                 "field_values": [
@@ -45,7 +45,13 @@
                 ],
                 "sub_fields": {
                     "Yes": {
-                        "Existing Plan provider": {
+                        "Existing Plan Coverage": {
+                            "field_type": "FIB"
+                        },
+                        "Existing Plan Type": {
+                            "field_type": "FIB"
+                        },
+                        "Existing Plan Provider": {
                             "field_type": "multiple",
                             "field_values": [
                                 "Sunlife",
@@ -55,12 +61,6 @@
                                 "Canada Life",
                                 "FIB"
                             ]
-                        },
-                        "Existing Plan Coverage": {
-                            "field_type": "FIB"
-                        },
-                        "Existing Plan Type": {
-                            "field_type": "FIB"
                         },
                         "is_many": true
                     }

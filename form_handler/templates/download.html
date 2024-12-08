@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Download Generated Docx File
+{% endblock %}
+
+{% block content %}
+  <h2>Download Generated Docx File</h2>
+  <a href="/media/{{ file_name }}" download>Download File</a>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Render Form
+{% endblock %}
+
+{% block content %}
+  {% with form_template=form_templates.0 %}
+    <div class="row">
+      <h5>Template Name: <b>{{ form_template.template_name }}</b></h5>
+      <h5>Plan Type: <b>{{ form_template.plan_type }}</b></h5>
+    </div>
+    <div class="row my-5">
+      <div class="col"></div>
+      <div class="col-md-6">
+        <h5 style="text-align: center;">Please fill the below form.<i>[Under Development: Some fields needs to be added.]</i></h5>
+      </div>
+      <div class="col"></div>
+    </div>
+    <form class="row my-5 g-3 needs-validation bg-light" method="POST" novalidate>
+      {% csrf_token %}
+      {% with all_fields=form_template.all_fields %}
+        {% for key, value in all_fields.items %}
+          {% if value.field_type == 'FIB' %}
+            <!-- Fill In Blank Starts here -->
+            <div class="col-md-4">
+              <label for="{{ key }}" class="form-label">{{ key }}</label>
+              <input type="text" class="form-control" id="{{ key }}" required />
+            </div>
+            <!-- Fill In Blank Ends here -->
+          {% elif value.field_type == 'multiple' %}
+            <!-- Multiple Radio button field Starts here -->
+            <div class="form-group">
+              <label>{{ key }}</label>
+
+              {% for fv in value.field_values %}
+                <div class="form-check">
+                  {% if fv == 'FIB' %}
+                    <label class="form-check-label" for="option-{{ key }}">Other:</label>
+                    <input class="form-input form-control" type="text" name="optionFIB-{{ key }}" id="{{ fv }}" />
+                  {% else %}
+                    <input class="form-check-input" type="radio" name="option-{{ key }}" id="{{ fv }}" value="{{ fv }}" />
+                    <label class="form-check-label" for="{{ fv }}">{{ fv }}</label>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Multiple Radio button subfield Starts here -->
+            {% with sub_fields=value.sub_fields %}
+              {% for k1, v1 in sub_fields.items %}
+                <div class="" id="many-elements">
+                  <div class="row m-5" id="existing-plan" style="display: none;">
+                    {% for k2, v2 in v1.items %}
+                      <!-- Check if field type is valid -->
+                      {% if v2.field_type %}
+                        <div class="col-md-4">
+                          {% if v2.field_type == 'FIB' %}
+                            <!-- Fill In Blank for Subfield Starts here -->
+
+                            <label for="{{ k2 }}_0" class="form-label">{{ k2 }}_0</label>
+                            <input type="text" class="form-control" id="{{ k2 }}_0" required />
+
+                            <!-- Fill In Blank for Subfield Ends here -->
+                          {% elif v2.field_type == 'multiple' %}
+                            <!-- Multiple Radio button for subfield Starts here -->
+
+                            <label>{{ k2 }}_0</label>
+                            {% for fv2 in v2.field_values %}
+                              <div class="form-check">
+                                {% if fv2 == 'FIB' %}
+                                  <label class="form-check-label" for="option-{{ k2 }}">Other:</label>
+                                  <input class="form-input form-control" type="text" name="optionFIB-{{ k2 }}" id="{{ fv2 }}" />
+                                {% else %}
+                                  <input class="form-check-input" type="radio" name="option-{{ k2 }}" id="{{ fv2 }}" value="{{ fv2 }}" />
+                                  <label class="form-check-label" for="{{ fv2 }}">{{ fv2 }}</label>
+                                {% endif %}
+                              </div>
+                            {% endfor %}
+                            <!-- Multiple Radio button for subfield Ends here -->
+                          {% endif %}
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <!-- Add More Button start -->
+                  {% if v1.is_many %}
+                    <div class="row" id="add-remove-btn" style="display: none;">
+                      <div id="more-fields"></div>
+                      <div class="col"></div>
+                      <button class="col-md-3" type="button" id="add-more">Add More</button>
+                      <button class="col-md-3" type="button" id="remove-last" style="display: none;">Remove Last</button>
+                      <div class="col"></div>
+                    </div>
+                  {% endif %}
+                  <!-- Add More Button end -->
+                </div>
+              {% endfor %}
+            {% endwith %}
+            <!-- Multiple Radio button subfield Ends here -->
+
+            <!-- Multiple Radio button field Ends here -->
+          {% elif value.field_type == 'checkbox' %}
+            <!-- Checkbox field Starts here -->
+            <div class="form-group">
+              <label>{{ key }}</label>
+              {% for fkv in value.field_key_values %}
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="checkbox-{{ fkv.consideration }}" name="x`-{{ fkv.consideration }}" />
+                  <label class="form-check-label" for="checkbox-{{ fkv.consideration }}"><b>{{ fkv.consideration }}</b>: {{ fkv.description }}</label>
+                </div>
+              {% endfor %}
+            </div>
+            <!-- Checkbox field Ends here -->
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Submit form</button>
+      </div>
+    </form>
+  {% endwith %}
+{% endblock %}
+
+{% block js_script %}
+  <script>
+    // global api value
+    let epi = 2
+    
+    // Show functionality starts here
+    $(document).ready(function () {
+      $('#Yes').change(function () {
+        if ($(this).is(':checked')) {
+          $('#existing-plan').show()
+          $('#add-remove-btn').show()
+        } else {
+          $('#existing-plan').hide()
+          $('#add-remove-btn').hide()
+        }
+      })
+      // Show functionality ends here
+    
+      // Hide functionality starts here
+      $('#No').change(function () {
+        if ($(this).is(':checked')) {
+          $('#existing-plan').hide()
+          $('#add-remove-btn').hide()
+        } else {
+          $('#existing-plan').show()
+          $('#add-remove-btn').show()
+        }
+      })
+    })
+    // Hide functionality ends here
+    
+    // Add more elements starts here
+    $(document).ready(function () {
+      $('#add-more').click(function () {
+        // Create a clone of the existing plan
+        const newPlan = document.getElementById('existing-plan').cloneNode(true)
+    
+        //TODO Remove the existing ID to avoid conflicts
+        // newPlan.removeAttribute('id')
+    
+        // Clear input values in the cloned element
+        newPlan.querySelectorAll('input').forEach((input) => {
+          input.value = ''
+          input.checked = false // For checkboxes and radio buttons
+        })
+    
+        // Append the clone to the parent container
+        document.getElementById('more-fields').append(newPlan)
+    
+        // Get the button element by ID
+        const remove_btn = document.getElementById('remove-last')
+    
+        // Set the display property to 'none'
+        remove_btn.style.display = 'block'
+      })
+      // Add more elements ends here
+    
+      // Remove added elements starts here
+      document.getElementById('remove-last').addEventListener('click', function () {
+        const lastChild = document.getElementById('more-fields').lastChild
+        lastChild.remove()
+    
+        if (!document.getElementById('more-fields').lastChild) {
+          // Get the button element by ID
+          const remove_btn = document.getElementById('remove-last')
+    
+          // Set the display property to 'none'
+          remove_btn.style.display = 'none'
+        }
+      })
+      // Remove added elements ends here
+    })
+  </script>
+{% endblock %}
