@@ -1,0 +1,120 @@
+[
+    {
+        "template_name": "Personal PAR",
+        "plan_type": "Participating Whole Life Insurance",
+        "plan_type_reasoning": "you preferred a participating whole life policy more than a whole life policy because it offers on-growing cash value and death benefit. In the long-term, these amounts can out pace inflation and ensures upon death the coverage payout holds its purchasing value. We have also discussed the difference between participating whole life vs Universal life insurance, you liked Par Policy better because par policies have its guarantees, whereas while Universal Life policies offer GIC type instruments, you wanted returns that are a little higher.  Universal life policies do offer variable investments, but these are subject to market volatility, and the policyholder will need to manage their own investment portfolio within their policies. You preferred Par life be over Term life because once again it features on-growing cash value and death benefit values (whereas term does not), as well as the option for future collateral ability. You also understand that with the same coverage, term life is significantly cheaper",
+        "all_fields": {
+            "client name": {
+                "field_type": "FIB"
+            },
+            "agent name": {
+                "field_type": "FIB"
+            },
+            "plan coverage": {
+                "field_type": "FIB"
+            },
+            "policy number": {
+                "field_type": "FIB"
+            },
+            "client occupation": {
+                "field_type": "FIB"
+            },
+            "plan provider": {
+                "field_type": "multiple",
+                "field_values": [
+                    "Sunlife",
+                    "Manulife",
+                    "Equitable Life",
+                    "IA",
+                    "Canada Life",
+                    "FIB"
+                ]
+            },
+            "plan funding period": {
+                "field_type": "multiple",
+                "field_values": [
+                    "20 Pay",
+                    "Life Pay"
+                ]
+            },
+            "existing plans": {
+                "field_type": "multiple",
+                "field_values": [
+                    "Yes",
+                    "No"
+                ],
+                "sub_fields": {
+                    "Yes": {
+                        "existing plan coverage": {
+                            "field_type": "FIB"
+                        },
+                        "existing plan type": {
+                            "field_type": "FIB"
+                        },
+                        "existing plan provider": {
+                            "field_type": "multiple",
+                            "field_values": [
+                                "Sunlife",
+                                "Manulife",
+                                "Equitable Life",
+                                "IA",
+                                "Canada Life",
+                                "FIB"
+                            ]
+                        },
+                        "is_many": true
+                    }
+                }
+            },
+            "common insurance needs": {
+                "field_type": "checkbox",
+                "field_key_values": [
+                    {
+                        "consideration": "Locking in insurability and low premiums",
+                        "description": "While the insured is younger and healthier, the policy will provide on growing coverage protection whilst the premium would have been locked in cheaper than if the individual were to set up a plan at a later age."
+                    },
+                    {
+                        "consideration": "Income supplement/ replacement",
+                        "description": "Protection for family members and loved ones who’s standard of living is dependent on the insured. In the event of death of the insured the loved one would receive the death benefit to cover the loss of income."
+                    },
+                    {
+                        "consideration": "Mortgage protection",
+                        "description": "In the case the insured were to pass away with an outstanding mortgage balance on their property the life insurance policy could ensure the beneficiary have the ability to use the death benefit to payoff the outstanding mortgage."
+                    },
+                    {
+                        "consideration": "Asset protection",
+                        "description": "While an asset may face the inherent risk of a volatile market, the policy ensures families are secured for the value of the asset at the time of the owner’s passing."
+                    },
+                    {
+                        "consideration": "Debt protection",
+                        "description": "In the event the insured were to pass away whilst still in the process of paying off a debt, the policy would provide the insured’s loved one’s peace of mind knowing the proceeds would allow them to cover the debt."
+                    },
+                    {
+                        "consideration": "Key person protection",
+                        "description": "Key person insurance offers a financial cushion if the sudden loss of a certain individual would profoundly negatively affect the company's operations. The death benefit functions to buy the company time to find a new person or to implement other strategies to save (or shut down) the business."
+                    },
+                    {
+                        "consideration": "Asset diversification",
+                        "description": "With the Capital Gain rate further increased to ~67% as of June 25th, 2024, there are greater taxes we will have to pay when realizing the appreciation from capital gain-based investment types, such as real estate. However, the growth that occurs within a Par policy is tax sheltered."
+                    },
+                    {
+                        "consideration": "Potential Collateral ability",
+                        "description": "While your cash value is growing year after year within your policy, you can access the policy’s liquidity without interrupting the growth of the cash value. It becomes a beneficial strategy when you can generate greater investment gains over the simple interest of taking out a loan."
+                    },
+                    {
+                        "consideration": "Final tax upon your estate",
+                        "description": "Whilst many of our assets such as investment properties and non-registered accounts are all subject to disposition tax upon death, life insurance is one of the few assets where a payout to a beneficiary bypasses probate and is not subject to any taxes."
+                    },
+                    {
+                        "consideration": "Investment tax",
+                        "description": "Capital gains-based investment types, such as GICs and non-registered accounts, are all subject to taxes. Given the limited room of government registered accounts, you were seeking other ways of growing your wealth tax free."
+                    },
+                    {
+                        "consideration": "The Manulife vitality program (should only appear as an option if the provider “Manulife” is selected)",
+                        "description": "You valued the vitality program within the policy and being able to take advantage of the annual rewards/points, such as an Apple Watch and Expedia travel discounts, were a few of the many rewards you had indicated you liked the plan."
+                    }
+                ]
+            }
+        }
+    }
+]
