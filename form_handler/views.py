@@ -3,32 +3,11 @@ import json
 import os
 
 from django.conf import settings
+from django.contrib import messages
 from django.http import FileResponse, HttpResponseNotFound
 from django.shortcuts import render
-from docx import Document
 
-
-def json_to_docx(data, docx_file):
-    """
-    Converts a JSON file into a formatted DOCX file.
-
-    Args:
-        data (dict): Json Data
-        docx_file (str): Path to the output DOCX file.
-    """
-
-    doc = Document()
-
-    # Add a title
-    doc.add_heading("JSON Data in DOCX", 0)
-
-    # Iterate through the data and add it to the document
-    for key, value in data.items():
-        p = doc.add_paragraph()
-        p.add_run(f"{key}: ").bold = True
-        p.add_run(str(value))
-
-    doc.save(docx_file)
+from .docx_generator import json_to_docx
 
 
 def download_file(request, encoded_path):
@@ -52,22 +31,79 @@ def download_file(request, encoded_path):
 
 def render_form(request):
     if request.method == "POST":
-        submitted_data = request.POST.dict()
-        print("Submitted Data:", submitted_data)
-        file_name = "form_results.docx"
-        file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+        try:
+            submitted_data = request.POST.dict()
+            file_name = "form_results.docx"
+            file_path = os.path.join(settings.MEDIA_ROOT, file_name)
 
-        submitted_data.pop("csrfmiddlewaretoken")
-        json_to_docx(submitted_data, file_path)
+            submitted_data.pop("csrfmiddlewaretoken")
+            template_file = "form_handler/static/form_handler/files/Personal PAR.docx"
+            if submitted_data.get("existing plans") == "No":
+                existing_plans = False
+            else:
+                existing_plans = {
+                    key: value
+                    for key, value in submitted_data.items()
+                    if "existing plan" in key and key != "existing plans"
+                }
 
-        return render(request, "download.html", context={"file_name": file_name})
-    else:
-        input_file_path = os.path.join(
-            settings.BASE_DIR, "form_handler", settings.INPUT_FORM_TEMPLATE
-        )
-        with open(input_file_path, "r") as file:
-            form_templates = json.load(file)
+                new_existing_plans = {}
+                for key, value in existing_plans.items():
+                    if not value:
+                        continue
+                    i = str(key.split("_")[-1])
+                    if i in new_existing_plans.keys():
+                        new_existing_plans[i].append(value)
+                    else:
+                        new_existing_plans[i] = [value]
+                existing_plans = new_existing_plans
 
-        return render(
-            request, "render_form.html", context={"form_templates": form_templates}
-        )
+            if submitted_data.get("FIB-plan provider"):
+                plan_provider = submitted_data["FIB-plan provider"]
+            else:
+                plan_provider = submitted_data["plan provider"]
+
+            plan_funding_period = submitted_data["plan funding period"]
+
+            common_insurance_needs = {
+                value.split(":")[0]: value.split(":")[1]
+                for key, value in submitted_data.items()
+                if key.startswith("common insurance needs")
+            }
+
+            # TODO
+            context = {
+                "client_name": submitted_data["client name"],
+                "client_occupation": submitted_data["client occupation"],
+                "existing_plans": existing_plans,
+                "common_insurance_needs": common_insurance_needs,
+                "plan_provider": plan_provider,
+                "plan_funding_period": plan_funding_period,
+                "plan_coverage": submitted_data["plan coverage"],
+                "policy_number": submitted_data["policy number"],
+                "plan_type": submitted_data["plan_type"],
+                "plan_type_reasoning": submitted_data["plan_type_reasoning"],
+                "agent_name": submitted_data["agent name"],
+            }
+
+            json_to_docx(
+                context=context,
+                template_file=template_file,
+                output_file=file_path,
+            )
+
+            messages.success(request, "The operation was successful.")
+            return render(request, "download.html", context={"file_name": file_name})
+        except Exception as err:
+            print(f"Exception Occurred:\t{err}")
+            messages.error(request, "Couldn't Generate Docx File. Try Again!")
+
+    input_file_path = os.path.join(
+        settings.BASE_DIR, "form_handler", settings.INPUT_FORM_TEMPLATE
+    )
+    with open(input_file_path, "r") as file:
+        form_templates = json.load(file)
+
+    return render(
+        request, "render_form.html", context={"form_templates": form_templates}
+    )
