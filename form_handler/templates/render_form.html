@@ -13,33 +13,35 @@
     <div class="row my-5">
       <div class="col"></div>
       <div class="col-md-6">
-        <h5 style="text-align: center;">Please fill the below form.<i>[Under Development: Some fields needs to be added.]</i></h5>
+        <h5 style="text-align: center;">Please fill the below form.<i></i></h5>
       </div>
       <div class="col"></div>
     </div>
     <form class="row my-5 g-3 needs-validation bg-light" method="POST" novalidate>
       {% csrf_token %}
+      <input name="plan_type" value="{{ form_template.plan_type }}" hidden />
+      <input name="plan_type_reasoning" value="{{ form_template.plan_type_reasoning }}" hidden />
       {% with all_fields=form_template.all_fields %}
         {% for key, value in all_fields.items %}
           {% if value.field_type == 'FIB' %}
             <!-- Fill In Blank Starts here -->
             <div class="col-md-4">
-              <label for="{{ key }}" class="form-label">{{ key }}</label>
-              <input type="text" class="form-control" id="{{ key }}" required />
+              <label for="{{ key }}" class="form-label">{{ key|title }}</label>
+              <input type="text" name="{{ key }}" class="form-control" required />
             </div>
             <!-- Fill In Blank Ends here -->
           {% elif value.field_type == 'multiple' %}
             <!-- Multiple Radio button field Starts here -->
             <div class="form-group">
-              <label>{{ key }}</label>
+              <label>{{ key|title }}</label>
 
               {% for fv in value.field_values %}
                 <div class="form-check">
                   {% if fv == 'FIB' %}
-                    <label class="form-check-label" for="option-{{ key }}">Other:</label>
-                    <input class="form-input form-control" type="text" name="optionFIB-{{ key }}" id="{{ fv }}" />
+                    <label class="form-check-label" for="FIB-{{ key }}">Other:</label>
+                    <input class="form-input form-control" type="text" name="FIB-{{ key }}" id="{{ fv }}" />
                   {% else %}
-                    <input class="form-check-input" type="radio" name="option-{{ key }}" id="{{ fv }}" value="{{ fv }}" />
+                    <input class="form-check-input" type="radio" name="{{ key }}" id="{{ fv }}" value="{{ fv }}" />
                     <label class="form-check-label" for="{{ fv }}">{{ fv }}</label>
                   {% endif %}
                 </div>
@@ -58,22 +60,22 @@
                           {% if v2.field_type == 'FIB' %}
                             <!-- Fill In Blank for Subfield Starts here -->
 
-                            <label for="{{ k2 }}_0" class="form-label">{{ k2 }}_0</label>
-                            <input type="text" class="form-control" id="{{ k2 }}_0" required />
+                            <label for="{{ k2 }}_1" class="form-label">{{ k2 }}_1</label>
+                            <input type="text" class="form-control" name="{{ k2 }}_1" required />
 
                             <!-- Fill In Blank for Subfield Ends here -->
                           {% elif v2.field_type == 'multiple' %}
                             <!-- Multiple Radio button for subfield Starts here -->
 
-                            <label>{{ k2 }}_0</label>
+                            <label>{{ k2 }}_1</label>
                             {% for fv2 in v2.field_values %}
                               <div class="form-check">
                                 {% if fv2 == 'FIB' %}
-                                  <label class="form-check-label" for="option-{{ k2 }}">Other:</label>
-                                  <input class="form-input form-control" type="text" name="optionFIB-{{ k2 }}" id="{{ fv2 }}" />
+                                  <label class="form-check-label" for="optionFIB-{{ k2 }}_1">Other:</label>
+                                  <input class="form-input form-control" type="text" name="optionFIB-{{ k2 }}_1" />
                                 {% else %}
-                                  <input class="form-check-input" type="radio" name="option-{{ k2 }}" id="{{ fv2 }}" value="{{ fv2 }}" />
-                                  <label class="form-check-label" for="{{ fv2 }}">{{ fv2 }}</label>
+                                  <input class="form-check-input" type="radio" name="option-{{ k2 }}_1" value="{{ fv2 }}" />
+                                  <label class="form-check-label" for="option-{{ k2 }}_1">{{ fv2 }}</label>
                                 {% endif %}
                               </div>
                             {% endfor %}
@@ -103,11 +105,11 @@
           {% elif value.field_type == 'checkbox' %}
             <!-- Checkbox field Starts here -->
             <div class="form-group">
-              <label>{{ key }}</label>
+              <label>{{ key|title }}</label>
               {% for fkv in value.field_key_values %}
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="checkbox-{{ fkv.consideration }}" name="x`-{{ fkv.consideration }}" />
-                  <label class="form-check-label" for="checkbox-{{ fkv.consideration }}"><b>{{ fkv.consideration }}</b>: {{ fkv.description }}</label>
+                  <input class="form-check-input" type="checkbox" name="{{ key }} {{ forloop.counter }}" value="{{ fkv.consideration }} : {{ fkv.description }}" required />
+                  <label class="form-check-label" for="{{ key }} {{ forloop.counter }}"><b>{{ fkv.consideration }}:</b> {{ fkv.description }}</label>
                 </div>
               {% endfor %}
             </div>
@@ -116,7 +118,7 @@
         {% endfor %}
       {% endwith %}
       <div class="col-12">
-        <button class="btn btn-primary" type="submit">Submit form</button>
+        <input class="btn btn-primary" type="submit" />
       </div>
     </form>
   {% endwith %}
@@ -156,20 +158,44 @@
     // Add more elements starts here
     $(document).ready(function () {
       $('#add-more').click(function () {
+        // get last element
+    
+        // Get all matching elements
+        const elements = document.querySelectorAll('#many-elements div#existing-plan')
+        const lastElement = elements[elements.length - 1]
+    
         // Create a clone of the existing plan
-        const newPlan = document.getElementById('existing-plan').cloneNode(true)
+        const newPlan = lastElement.cloneNode(true)
     
         //TODO Remove the existing ID to avoid conflicts
         // newPlan.removeAttribute('id')
     
-        // Clear input values in the cloned element
-        newPlan.querySelectorAll('input').forEach((input) => {
-          input.value = ''
-          input.checked = false // For checkboxes and radio buttons
-        })
+        // Fetch the label element using the querySelector
+        const label = newPlan.querySelector('#existing-plan > div:nth-child(1) > label')
+        // Extract the number from the 'for' attribute
+        const forAttribute = label.getAttribute('for')
+        const match = forAttribute.match(/_(\d+)$/) // Match the "_<number>" part
+        if (match) {
+          const number = parseInt(match[1], 10) // Extract and parse the number
+          const incrementedNumber = number + 1 // Increment the number
+          // Replace the old number with the incremented number in the innerHTML
+          newPlan.innerHTML = newPlan.innerHTML.replace(new RegExp(`_${number}`, 'g'), `_${incrementedNumber}`)
     
-        // Append the clone to the parent container
-        document.getElementById('more-fields').append(newPlan)
+          // Clear input values in the cloned element
+          newPlan.querySelectorAll('input').forEach((input) => {
+            if (input.type !== 'radio') {
+              input.value = '' // Clear the value
+              if (input.type === 'checkbox') {
+                input.checked = false // Uncheck checkboxes
+              }
+            }
+          })
+    
+          // Append the clone to the parent container
+          document.getElementById('more-fields').append(newPlan)
+        } else {
+          console.error("No number found in the 'for' attribute.")
+        }
     
         // Get the button element by ID
         const remove_btn = document.getElementById('remove-last')
@@ -194,5 +220,19 @@
       })
       // Remove added elements ends here
     })
+    
+    // start Clear other field when selected any other radio
+    // Add event listeners to all radio buttons
+    document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+      // Get the parent element (e.g., the <div> wrapping the radio button)
+    
+      radio.addEventListener('change', () => {
+        const radioElement = radio.parentElement.parentElement.querySelector("input[type='text']")
+        if (radioElement) {
+          radioElement.value = ''
+        }
+      })
+    })
+    // end Clear other field when selected any other radio
   </script>
 {% endblock %}
