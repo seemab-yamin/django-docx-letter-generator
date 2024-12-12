@@ -16,11 +16,21 @@
       <div class="row my-5">
         <div class="col"></div>
         <div class="col-md-6">
-          <h1 style="text-align: center;">Reason Why Letter Generator</h1>
+          <h1 style="text-align: center;"><a href="{% url 'render_form' %}" class="text-decoration-none">Reason Why Letter Generator</a></h1>
         </div>
         <div class="col"></div>
       </div>
 
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
       {% block content %}
 
       {% endblock %}
@@ -30,5 +40,20 @@
     {% block js_script %}
 
     {% endblock %}
+    <script>
+      // error message disappear
+      const alerts = document.querySelectorAll('.alert.alert-danger')
+      alerts.forEach((alert) => {
+        setTimeout(() => {
+          alert.classList.add('fade-out')
+        }, 3000) // 3 seconds
+      })
+      
+      alerts.forEach((alert) => {
+        setTimeout(() => {
+          alert.remove()
+        }, 3500) // Adjust the timeout to match the fade-out duration
+      })
+    </script>
   </body>
 </html>
