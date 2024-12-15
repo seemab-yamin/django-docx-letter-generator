@@ -1,0 +1,4 @@
+Django
+docxtpl
+lxml
+python-docx

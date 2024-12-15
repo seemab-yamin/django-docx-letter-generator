@@ -37,7 +37,10 @@ def render_form(request):
             file_path = os.path.join(settings.MEDIA_ROOT, file_name)
 
             submitted_data.pop("csrfmiddlewaretoken")
-            template_file = "form_handler/static/form_handler/files/Personal PAR.docx"
+
+            template_file = os.path.join(
+                settings.STATIC_ROOT, "form_handler/files/Personal_PAR.docx"
+            )
             if submitted_data.get("existing plans") == "No":
                 existing_plans = False
             else:
